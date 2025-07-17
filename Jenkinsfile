@@ -54,11 +54,7 @@ pipeline {
     }
 
     post {
-        always {
-            slackSend(channel: '#builds', message: "Job: ${env.JOB_NAME} #${env.BUILD_NUMBER} finished with status: ${currentBuild.currentResult}", color: "#439FE0")
-            office365ConnectorSend webhookUrl: 'https://outlook.office.com/webhook/your-webhook-url', message: "Job: ${env.JOB_NAME} #${env.BUILD_NUMBER} finished with status: ${currentBuild.currentResult}"
-            cleanWs()
-        }
+       
         success {
             emailext (
                 subject: "Jenkins Job SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
