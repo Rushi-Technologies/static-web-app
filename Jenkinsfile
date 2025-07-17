@@ -8,13 +8,13 @@ pipeline {
         TAG = "latest"
         FULL_IMAGE = "${REGISTRY}/${DOCKER_USER}/${IMAGE_NAME}:${TAG}"
         REMOTE_USER = "ec2-user"
-        REMOTE_HOST = "your.ec2.ip.address"
+        REMOTE_HOST = "13.203.201.3"
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/your-org/rushi-technologies-site.git'
+                git 'https://github.com/abhiGithubIT/static-web-app.git'
             }
         }
 
@@ -37,7 +37,7 @@ pipeline {
 
         stage('Remote Deployment via Pull') {
             steps {
-                sshagent(['your-ssh-key-id']) {
+                sshagent(['nodejs']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "
                             echo \"Logging into DockerHub...\"
@@ -54,11 +54,7 @@ pipeline {
     }
 
     post {
-        always {
-            slackSend(channel: '#builds', message: "Job: ${env.JOB_NAME} #${env.BUILD_NUMBER} finished with status: ${currentBuild.currentResult}", color: "#439FE0")
-            office365ConnectorSend webhookUrl: 'https://outlook.office.com/webhook/your-webhook-url', message: "Job: ${env.JOB_NAME} #${env.BUILD_NUMBER} finished with status: ${currentBuild.currentResult}"
-            cleanWs()
-        }
+       
         success {
             emailext (
                 subject: "Jenkins Job SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
@@ -66,7 +62,7 @@ pipeline {
                          <p><b>Job:</b> ${env.JOB_NAME}</p>
                          <p><b>Build #:</b> ${env.BUILD_NUMBER}</p>
                          <p><b>URL:</b> <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>''',
-                to: "your_email@gmail.com"
+                to: "abhiabhishek299@gmail.com"
             )
         }
 
@@ -77,7 +73,7 @@ pipeline {
                          <p><b>Job:</b> ${env.JOB_NAME}</p>
                          <p><b>Build #:</b> ${env.BUILD_NUMBER}</p>
                          <p><b>URL:</b> <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>''',
-                to: "your_email@gmail.com"
+                to: "abhiabhishek299@gmail.com"
             )
         }
 
