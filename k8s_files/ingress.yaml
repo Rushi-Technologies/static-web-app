@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: staticwebapp-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: staticweb.rushiitechnologies.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: static-webapp-svc
+            port: 
+              number: 80

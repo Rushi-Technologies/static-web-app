@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: staticwebapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: staticwebapp
+  template:
+    metadata:
+      labels:
+        app: staticwebapp
+    spec:
+      containers:
+      - name: staticwebapp
+        image: rushitechnologiesbalaji/rushitech-static-webapp:1 
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5  
