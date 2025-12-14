@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: staticwebapp
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: staticwebapp
@@ -14,7 +13,7 @@ spec:
     spec:
       containers:
       - name: staticwebapp
-        image: rushitechnologiesbalaji/rushitech-static-webapp:1 
+        image: rushitechnologiesbalaji/rushitech-static-webapp:2
         ports:
         - containerPort: 80
         resources:
