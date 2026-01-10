@@ -11,3 +11,5 @@ dist
 *.github
 *.swp
 *.md
+k8s_files/
+Jenkinsfile*
