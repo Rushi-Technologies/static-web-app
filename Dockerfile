@@ -1,4 +1,2 @@
-# Use official Nginx image
-FROM nginx:alpine
-# Copy custom static website files to nginx html folder
+FROM nginx
 COPY . /usr/share/nginx/html
