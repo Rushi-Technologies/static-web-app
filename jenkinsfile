@@ -43,7 +43,7 @@ pipeline {
         failure {
             echo "Pipeline execution failed."
         }
-        aiways {
+        always {
             cleanWs()
             echo "Pipeline execution completed."
         }
