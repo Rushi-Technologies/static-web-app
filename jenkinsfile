@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    environment {
+    
+    SONARQUBE_SERVER = 'SonarQube_Server'
+    SONAR_PROJECT_KEY = 'static-web-app'
+    SONAR_PROJECT_NAME = 'static-web-app'
+
+    NGINX_USER = 'ec2-user'
+    NGINX_HOST = '98.92.109.2'
+    NGINX_PATH = '/usr/share/nginx/html'
+
+    
+    SSH_CREDENTIALS = 'nginx_server_SSH_Cred'
+
+    }
+    stages {
+        stage("Git Clone"){
+            steps{
+                git branch: 'main', credentialsId: 'GitHub_Credentials', url: 'https://github.com/kasettyhemanth/static-web-app.git'
+            }
+        }
+        stage('SonarQube Code Analysis'){
+            steps{
+                withSonarQubeEnv("${SONARQUBE_SERVER}"){
+                    sh "sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName=${SONAR_PROJECT_NAME}"
+                }
+            }
+        }
+        stage('Deploy to Nginx Server'){
+            steps{
+                sshagent (credentials: ["${SSH_CREDENTIALS}"]){
+                    sh "scp -o StrictHostKeyChecking=no -r * ${NGINX_USER}@${NGINX_HOST}:${NGINX_PATH}"
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo "Static website deployed successfully to Nginx Server (${NGINX_HOST})."
+        }
+        failure {
+            echo "Pipeline execution failed."
+        }
+        aiways {
+            cleanWs()
+            echo "Pipeline execution completed."
+        }
+    }
+}
+
